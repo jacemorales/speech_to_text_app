@@ -56,7 +56,7 @@ npx react-native run-ios
 npx react-native run-android
 ```
 
-# 🎯 Usage
+## 🎯 Usage
 - Open the app on your device.
 - Press the Start Recording button.
 - Speak into the microphone — your words will appear as text instantly.
