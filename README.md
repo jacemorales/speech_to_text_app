@@ -42,13 +42,15 @@ cd speech-to-text-app
 npm install
 # or
 yarn install
+```
 
-
-##  Run the App
+###  Run the App
+```bash
 #Expo:
 npx expo start
 
-##  React Native CLI:
+`React Native CLI`
+
 #iOS
 npx react-native run-ios
 
@@ -56,7 +58,7 @@ npx react-native run-ios
 npx react-native run-android
 ```
 
-## 🎯 Usage
+### 🎯 Usage
 - Open the app on your device.
 - Press the Start Recording button.
 - Speak into the microphone — your words will appear as text instantly.
