@@ -48,8 +48,10 @@ yarn install
 ```bash
 #Expo:
 npx expo start
+```
 
-###React Native CLI
+```bash
+React Native CLI
 #iOS
 npx react-native run-ios
 
