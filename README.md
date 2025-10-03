@@ -42,3 +42,23 @@ cd speech-to-text-app
 npm install
 # or
 yarn install
+
+
+##  Run the App
+#Expo:
+npx expo start
+
+##  React Native CLI:
+#iOS
+npx react-native run-ios
+
+#Android
+npx react-native run-android
+```
+
+# 🎯 Usage
+- Open the app on your device.
+- Press the Start Recording button.
+- Speak into the microphone — your words will appear as text instantly.
+- Pause or stop recording as needed.
+- Save transcripts for later use.
