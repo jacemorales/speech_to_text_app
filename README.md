@@ -49,7 +49,7 @@ yarn install
 #Expo:
 npx expo start
 
-`React-Native-CLI`
+React-Native-CLI
 
 #iOS
 npx react-native run-ios
