@@ -4,14 +4,6 @@ A **React Native mobile application** that converts your voice into text in real
 
 ---
 
-## 📸 Screenshots
-
-| Real-time Transcription | Multiple Languages |
-|------------------------|------------------|
-| ![screen1](./assets/screen1.png) | ![screen2](./assets/screen2.png) |
-
----
-
 ## ⚡ Features
 
 - Real-time speech-to-text transcription  
