@@ -51,7 +51,6 @@ npx expo start
 ```
 
 ```bash
-- React Native CLI
 #iOS
 npx react-native run-ios
 
