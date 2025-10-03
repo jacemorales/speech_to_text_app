@@ -34,10 +34,6 @@ A **React Native mobile application** that converts your voice into text in real
 ### Installation
 
 ```bash
-# Clone the repo
-git clone https://github.com/your-username/speech-to-text-app.git
-cd speech-to-text-app
-
 # Install dependencies
 npm install
 # or
