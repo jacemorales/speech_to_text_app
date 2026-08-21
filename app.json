@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "temp_app",
+    "name": "Speech to Text App",
     "sdkVersion": "54.0.0",
-    "slug": "temp_app",
+    "slug": "speech-to-text-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -23,7 +23,8 @@
     },
     "plugins": [
       "expo-asset",
-      "expo-font"
+      "expo-font",
+      "expo-speech-recognition"
     ]
   }
 }

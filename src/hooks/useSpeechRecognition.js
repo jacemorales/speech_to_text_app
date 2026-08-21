@@ -1,5 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Platform } from 'react-native';
+import {
+  ExpoSpeechRecognitionModule,
+  useSpeechRecognitionEvent,
+} from 'expo-speech-recognition';
 
 export const SUPPORTED_LANGUAGES = [
   { code: 'en-US', name: 'English (US)' },
@@ -55,7 +59,38 @@ export function useSpeechRecognition() {
   const simulationTimerRef = useRef(null);
   const simulationIndexRef = useRef(0);
 
-  // Initialize SpeechRecognition if available on Web
+  // ExpoSpeechRecognition Event Listeners
+  useSpeechRecognitionEvent('result', (event) => {
+    if (event && event.results && event.results.length > 0) {
+      const latestText = event.results[0]?.transcript || '';
+      if (latestText) {
+        setTranscript(latestText);
+        setIsSimulated(false);
+      }
+    }
+  });
+
+  useSpeechRecognitionEvent('start', () => {
+    setIsListening(true);
+    setIsPaused(false);
+    setIsSimulated(false);
+  });
+
+  useSpeechRecognitionEvent('end', () => {
+    setIsListening(false);
+  });
+
+  useSpeechRecognitionEvent('error', (event) => {
+    console.error('Expo Speech Recognition error:', event);
+    if (event?.error === 'not-allowed' || event?.error === 'service-not-allowed') {
+      setError(`Permission or service error: ${event.message || event.error}. Fallback to simulation mode.`);
+      startSimulation(selectedLanguage);
+    } else if (event?.error !== 'aborted') {
+      setError(`Speech error: ${event.message || event.error}`);
+    }
+  });
+
+  // Initialize Web Speech API as fallback for Web browser
   useEffect(() => {
     if (Platform.OS === 'web' && typeof window !== 'undefined') {
       const SpeechRecognition =
@@ -63,14 +98,11 @@ export function useSpeechRecognition() {
 
       if (!SpeechRecognition) {
         setHasBrowserSupport(false);
-        console.warn('Web Speech API is not supported in this browser. Simulation mode active.');
       }
-    } else {
-      setHasBrowserSupport(false);
     }
   }, []);
 
-  // Cleanup timers on unmount
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (simulationTimerRef.current) {
@@ -80,8 +112,13 @@ export function useSpeechRecognition() {
         try {
           recognitionRef.current.stop();
         } catch (e) {
-          // ignore cleanup errors
+          // ignore
         }
+      }
+      try {
+        ExpoSpeechRecognitionModule.abort();
+      } catch (e) {
+        // ignore
       }
     };
   }, []);
@@ -108,9 +145,33 @@ export function useSpeechRecognition() {
     }, 2500);
   }, []);
 
-  const startListening = useCallback(() => {
+  const startListening = useCallback(async () => {
     setError(null);
 
+    // 1. Try Native / Expo Speech Recognition module first
+    try {
+      if (ExpoSpeechRecognitionModule) {
+        const perm = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
+        if (perm.granted) {
+          setIsSimulated(false);
+          setIsListening(true);
+          setIsPaused(false);
+          ExpoSpeechRecognitionModule.start({
+            lang: selectedLanguage,
+            interimResults: true,
+            continuous: true,
+            addsPunctuation: true,
+          });
+          return;
+        } else {
+          setError('Microphone or Speech Recognition permission was denied.');
+        }
+      }
+    } catch (e) {
+      console.warn('ExpoSpeechRecognitionModule error/unavailable:', e);
+    }
+
+    // 2. Try Web Speech API if running on web
     if (Platform.OS === 'web' && typeof window !== 'undefined') {
       const SpeechRecognition =
         window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -141,18 +202,17 @@ export function useSpeechRecognition() {
           };
 
           recognition.onerror = (event) => {
-            console.error('Speech recognition error:', event.error);
-            if (event.error === 'not-allowed' || event.error === 'service-not-allowed' || event.error === 'no-speech') {
+            console.error('Web Speech recognition error:', event.error);
+            if (
+              event.error === 'not-allowed' ||
+              event.error === 'service-not-allowed' ||
+              event.error === 'no-speech'
+            ) {
               setError(`Speech recognition notice: ${event.error}. Switching to demo simulation.`);
-              // Fallback to simulation mode if mic fails or permission denied
               startSimulation(selectedLanguage);
             } else {
               setError(`Error: ${event.error}`);
             }
-          };
-
-          recognition.onend = () => {
-            // Keep state synchronized
           };
 
           recognition.start();
@@ -164,7 +224,7 @@ export function useSpeechRecognition() {
       }
     }
 
-    // Fallback simulation mode
+    // 3. Fallback simulation mode if speech recognition unavailable
     startSimulation(selectedLanguage);
   }, [selectedLanguage, startSimulation]);
 
@@ -180,6 +240,12 @@ export function useSpeechRecognition() {
       } catch (e) {
         // ignore
       }
+    }
+
+    try {
+      ExpoSpeechRecognitionModule.stop();
+    } catch (e) {
+      // ignore
     }
 
     setIsListening(false);
@@ -206,6 +272,12 @@ export function useSpeechRecognition() {
       } catch (e) {
         // ignore
       }
+    }
+
+    try {
+      ExpoSpeechRecognitionModule.stop();
+    } catch (e) {
+      // ignore
     }
 
     setIsListening(false);
