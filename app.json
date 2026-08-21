@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "temp_app",
+    "sdkVersion": "54.0.0",
     "slug": "temp_app",
     "version": "1.0.0",
     "orientation": "portrait",
