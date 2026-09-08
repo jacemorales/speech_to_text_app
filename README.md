@@ -1,25 +1,26 @@
-# 🎤 Speech-to-Text App
+# 🎤 Speech to Text App (Flutter Edition)
 
-A **React Native mobile application** that converts your voice into text in real-time. Perfect for note-taking, transcription, or voice-controlled apps.
+A modern, sleek, and highly interactive **Flutter application** that converts speech to text in real-time. Features fluid animations, local persistence, category tagging, search, copy/share capabilities, and fallback demo simulation.
 
 ---
 
 ## ⚡ Features
 
-- Real-time speech-to-text transcription  
-- Start, pause, and stop voice input  
-- Supports multiple languages (depending on device)  
-- Save transcripts locally  
-- Minimal and user-friendly interface  
+- **Real-Time Speech Recognition**: Seamless live voice-to-text conversion.
+- **Demo Simulation Mode**: Automatic simulation fallback when voice input is unavailable or denied on web/desktop.
+- **Multi-Language Support**: Switch easily between 10+ supported spoken languages.
+- **Interactive Audio Visualizer**: Dynamic visualizer bars and glowing pulsing mic button when recording.
+- **Local Persistence**: Save, edit, search, favorite, and delete transcripts locally using `shared_preferences`.
+- **Modern Material 3 UX**: Clean dark & light modes, rich typography, smooth animations (`flutter_animate`), and dynamic note statistics (word & character count).
 
 ---
 
 ## 🛠 Tech Stack
 
-- React Native  
-- `react-native-voice` / `expo-speech`  
-- AsyncStorage (optional, for saving transcripts)  
-- iOS & Android support  
+- **Framework**: Flutter (Dart 3)
+- **State & UI**: Material 3 Design, Google Fonts, Flutter Animate
+- **Speech Engine**: `speech_to_text`
+- **Storage**: `shared_preferences`
 
 ---
 
@@ -27,36 +28,20 @@ A **React Native mobile application** that converts your voice into text in real
 
 ### Prerequisites
 
-- Node.js >= 18  
-- npm or yarn  
-- React Native CLI or Expo CLI  
+- [Flutter SDK](https://docs.flutter.dev/get-started/install) (3.0 or higher)
 
-### Installation
+### Run the App
 
 ```bash
-# Install dependencies
-npm install
-# or
-yarn install
+# Fetch dependencies
+flutter pub get
+
+# Run on available device or browser
+flutter run
 ```
 
-###  Run the App
-```bash
-#Expo:
-npx expo start
-```
+### Run Tests
 
 ```bash
-#iOS
-npx react-native run-ios
-
-#Android
-npx react-native run-android
+flutter test
 ```
-
-### 🎯 Usage
-- Open the app on your device.
-- Press the Start Recording button.
-- Speak into the microphone — your words will appear as text instantly.
-- Pause or stop recording as needed.
-- Save transcripts for later use.
